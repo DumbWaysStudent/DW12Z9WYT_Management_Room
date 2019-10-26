@@ -25,7 +25,7 @@ app.group('/api/v2', router => {
 
   //Get All Rooms
   router.get('/rooms', authenticated, RoomControllers.show);
-  router.post('/room', RoomControllers.addRoom);
+  router.post('/room', authenticated, RoomControllers.addRoom);
   router.put('/room/:id', RoomControllers.editRoom);
 
   // Customer
