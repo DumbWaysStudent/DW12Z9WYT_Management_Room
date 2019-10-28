@@ -23,15 +23,23 @@ app.group('/api/v2', router => {
   router.post('/login', AuthController.login);
   router.post('/register', AuthController.register);
 
+  //Get User
+  router.get('/user/:id', AuthController.showUser);
+
   //Get All Rooms
   router.get('/rooms', authenticated, RoomControllers.show);
   router.post('/room', authenticated, RoomControllers.addRoom);
-  router.put('/room/:id', RoomControllers.editRoom);
+  router.put('/room/:id', authenticated, RoomControllers.editRoom);
 
   // Customer
-  router.get('/customers', GuestControllers.showGuest);
-  router.post('/customer', GuestControllers.addGuest);
-  router.put('/customer/:id', GuestControllers.editGuest);
+  router.get('/customers', authenticated, GuestControllers.showGuest);
+  router.post('/customer', authenticated, GuestControllers.addGuest);
+  router.put('/customer/:id', authenticated, GuestControllers.editGuest);
+
+  //Order
+  router.get('/checkin', authenticated, RoomControllers.showCheckin);
+  router.post('/checkin', authenticated, RoomControllers.addCheckin);
+  router.put('/checkin/:id', authenticated, RoomControllers.editCheckin);
 });
 
 app.listen(port, () => console.log(`Listening on port ${port} !`));

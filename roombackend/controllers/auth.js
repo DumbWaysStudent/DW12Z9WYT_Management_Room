@@ -1,32 +1,32 @@
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
-const models = require("../models");
+const models = require('../models');
 const User = models.user;
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt');
 
 exports.login = (req, res) => {
   User.findOne({
-    where: { email: req.body.email }
+    where: {email: req.body.email},
   }).then(user => {
     if (user) {
       const authorize = bcrypt.compareSync(req.body.password, user.password);
 
       if (authorize) {
-        const token = jwt.sign({ id: user.id }, "my-secret-key");
+        const token = jwt.sign({id: user.id}, 'my-secret-key');
 
         res.send({
           id: user.id,
           email: user.email,
-          token
+          token,
         });
       } else {
         res.status(201).send({
-          message: "Validation error: Wrong password!"
+          message: 'Validation error: Wrong password!',
         });
       }
     } else {
       res.status(201).send({
-        message: "Validation error: Unregistered email!"
+        message: 'Validation error: Unregistered email!',
       });
     }
   });
@@ -37,16 +37,23 @@ exports.register = (req, res) => {
   User.create({
     email: req.body.email,
     password: hashedPassword,
-    name: req.body.name
+    name: req.body.name,
   }).then(user => {
     if (user) {
-      const token = jwt.sign({ id: user.id }, "my-secret-key");
+      const token = jwt.sign({id: user.id}, 'my-secret-key');
       res.send({
         id: user.id,
         email: user.email,
-        register: "Succesfull",
-        token
+        register: 'Succesfull',
+        token,
       });
     }
+  });
+};
+
+exports.showUser = (req, res) => {
+  const id = req.params.id;
+  User.findOne({where: {id: id}}).then(data => {
+    res.send(data);
   });
 };
